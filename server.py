@@ -1,7 +1,7 @@
 import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
-from flask import Flask, request, render_template, g, redirect, Response, make_response, url_for, session
+from flask import Flask, request, render_template, g, redirect, Response, make_response, url_for, session, flash
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -68,16 +68,16 @@ def login_authen():
 
 	user_id = []
 	username = []
-	if_dev = []
+	if_dev = False
 
-	for tuple in cur:
-		user_id.append(str(tuple[0]))
-		username.append(str(tuple[1]))
-		if_dev = if_dev.append(bool(tuple[2]))
+	for i in cur:
+		user_id.append(str(i[0]))
+		username.append(str(i[1]))
+		if_dev = bool(i[2])
 
 	cur.close()
 
-	if len(user_id) == 1 and len(username) == 1 and len(if_dev) == 1:
+	if len(user_id) == 1 and len(username) == 1:
 		session['username'] = username[0]
 		session['user_id'] = user_id[0]
 		session['if_dev'] = if_dev
@@ -115,8 +115,12 @@ def review():
 	#Verify if it is the first time user vising Iris
 	try:
 		user_id = session['user_id']
+		username = session['username']
+		if_dev = session['if_dev']
 	except:
 		return redirect(url_for('login'))
+
+	ifLoggedOn = True
 
 	cur = g.conn.execute('SELECT if_firstrun FROM USERS WHERE USERS.user_id = %s', user_id)
 	for i in cur:
@@ -196,9 +200,9 @@ def review():
 		controls.append(bool(i[4]))
 	cur.close()
 
-	print product_id
-
-	return render_template('review.html', product_id = product_id, section_seq = section_seq, section_id = section_id, section_name = section_name, post_seq = post_seq, post_id = post_id, post_title = post_title, post_content = post_content, upvotes = upvotes, downvotes = downvotes, usernames = usernames, post_time = post_time, notice = notice, controls = controls, current_section_id = current_section_id)
+	print len(section_name)
+	print len(section_id)
+	return render_template('review.html', ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev, product_id = product_id, section_seq = section_seq, section_id = section_id, section_name = section_name, post_seq = post_seq, post_id = post_id, post_title = post_title, post_content = post_content, upvotes = upvotes, downvotes = downvotes, usernames = usernames, post_time = post_time, notice = notice, controls = controls, current_section_id = current_section_id)
 ##
 @app.route('/review_addpost', methods = ['GET','POST'])
 def review_addpost():
@@ -325,37 +329,61 @@ def register_product_accessDB():
 	return redirect(url_for('review'))
 ##
 @app.route('/followup', methods = ['GET'])
-def follow_up_return():
-	return redirect(url_for('review'))
-##
-@app.route('/followup', methods = ['POST'])
 def follow_up():
-	upvotes = int(request.form['upvote'])
-	downvotes = int(request.form['downvote'])
-	post_id = request.form['postid']
-	section_id = request.form['sectionid']
-	section_name = request.form['sectionname']
-	product_id = request.form['productid']
-	post_title = request.form['posttitle']
-	post_content = request.form['postcontent']
-
 	try:
-		newfollowup_content = request.form['requestcontent']
-		cur = g.conn.execute('INSERT INTO FOLLOWUPS_NEW VALUES (DEFAULT, %s, %s, %s, %s)', post_id, section_id, product_id, newfollowup_content)
-		cur.close()
+		username = session['username']
+		if_dev = bool(session['if_dev'])
+		upvotes = int(request.args['upvote'])
+		downvotes = int(request.args['downvote'])
+		post_id = int(request.args['postid'])
+		current_section_id = int(request.args['currentsectionid'])
+		product_id = int(request.args['productid'])
+		post_title = request.args['posttitle']
+		post_content = request.args['postcontent']
 	except:
-		pass
+		return redirect(url_for('review'))
+
+	ifLoggedOn = True
+	section_id = []
+	section_name = []
+	cur = g.conn.execute('SELECT section_id, section_name FROM SECTIONS_NEW WHERE product_id = %s', product_id)
+	for i in cur:
+		section_id.append(i[0])
+		section_name.append(i[1])
+	cur.close()
+
+	section_seq = range(0, len(section_id))
 
 	ifdevanswered = False
 	ifnotice = False
 
-	cur = g.conn.execute('SELECT followup_content FROM FOLLOWUPS_NEW WHERE product_id = %s AND section_id = %s AND post_id = %s', product_id, section_id, post_id)
+	cur = g.conn.execute('SELECT followup_content FROM FOLLOWUPS_NEW WHERE product_id = %s AND section_id = %s AND post_id = %s', product_id, current_section_id, post_id)
 	follow_ups = []
 	for i in cur:
 		follow_ups.append(i[0])
 	follow_up_seq = range(0, len(follow_ups))
 
-	return render_template('follow_up.html', post_id = post_id, section_name = section_name, product_id = product_id, upvotes = upvotes, downvotes = downvotes, post_title = post_title, post_content = post_content, ifdevanswered = ifdevanswered, ifnotice = ifnotice, follow_up_seq = follow_up_seq, follow_ups = follow_ups)
+	return render_template('follow_up.html', username = username, ifLoggedOn = ifLoggedOn, if_dev = if_dev, post_id = post_id, section_seq = section_seq, section_id = section_id, section_name = section_name, product_id = product_id, upvotes = upvotes, downvotes = downvotes, post_title = post_title, post_content = post_content, ifdevanswered = ifdevanswered, ifnotice = ifnotice, follow_up_seq = follow_up_seq, follow_ups = follow_ups, current_section_id = current_section_id)
+##
+@app.route('/add_followup', methods = ['GET','POST'])
+def add_followup():
+	try:
+		post_id = request.form['postid']
+		current_section_id = request.form['currentsectionid']
+		product_id = request.form['productid']
+		upvotes = request.form['upvote']
+		downvotes = request.form['downvote']
+		post_title = request.form['posttitle']
+		post_content = request.form['postcontent']
+		followup_title = request.form['followuptitle']
+		followup_content = request.form['followupcontent']
+	except:
+		return redirect(url_for('review'))
+
+	cur = g.conn.execute('INSERT INTO FOLLOWUPS_NEW VALUES (DEFAULT, %s, %s, %s, %s)', post_id, current_section_id, product_id, followup_content)
+	cur.close()
+
+	return redirect(url_for('follow_up', ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev, postid = post_id, currentsectionid = current_section_id, productid = product_id, upvote = upvotes, downvote = downvotes, posttitle = post_title, postcontent = post_content))
 
 ##
 @app.route('/control_panel', methods = ['GET'])
@@ -363,8 +391,11 @@ def control_panel():
 
 	try:
 		user_id = session['user_id']
+		username = session['username']
 	except:
 		return redirect(url_for('login'))
+
+	ifLoggedOn = True
 
 	if_dev = session['if_dev']
 	if if_dev == False:
@@ -379,7 +410,33 @@ def control_panel():
 	if product_name == '':
 		return redirect(url_for('add_product'))
 
-	return render_template('control_panel.html', product_name = product_name, user_id = user_id)
+	counts = []
+	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW WHERE CURRENT_TIMESTAMP - post_time < INTERVAL '1 DAY'")
+	for i in cur:
+		counts.append(i[0])
+	cur.close()
+
+	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW WHERE CURRENT_TIMESTAMP - post_time < INTERVAL '2 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '1 DAY'")
+	for i in cur:
+		counts.append(i[0])
+	cur.close()
+
+	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW WHERE CURRENT_TIMESTAMP - post_time < INTERVAL '3 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '2 DAY'")
+	for i in cur:
+		counts.append(i[0])
+	cur.close()
+
+	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW WHERE CURRENT_TIMESTAMP - post_time < INTERVAL '4 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '3 DAY'")
+	for i in cur:
+		counts.append(i[0])
+	cur.close()
+
+	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW WHERE CURRENT_TIMESTAMP - post_time < INTERVAL '5 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '4 DAY'")
+	for i in cur:
+		counts.append(i[0])
+	cur.close()
+
+	return render_template('control_panel.html', counts = counts, username = username, ifLoggedOn = ifLoggedOn, if_dev = if_dev, product_name = product_name, user_id = user_id)
 ##
 @app.route('/add_product', methods = ['GET'])
 def add_product():
@@ -407,11 +464,134 @@ def add_product_accessDB():
 ##
 @app.route('/control_panel/manage_feature', methods = ['GET'])
 def manage_feature():
+	try:
+		user_id = session['user_id']
+		username = session['username']
+		if_dev = session['if_dev']
+	except:
+		return redirect(url_for('index'))
+
+	ifLoggedOn = True
+
+	if if_dev != True:
+		return redirect(url_for('index'))
+
+	cur = g.conn.execute("SELECT if_upvote_allowed, if_downvote_allowed, max_votes, if_user_generated_feature_request_allowed, if_followup_allowed FROM DEVS_PRODUCTS WHERE user_id = %s", user_id)
+	controls = []
+
+	for i in cur:
+		for k in range(0, 5):
+			if i[k] == 3:
+				controls.append(True)
+			else:
+				controls.append(i[k])
+
+	cur.close()
+
+	return render_template('manage_feature.html', ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev, controls = controls)
+##
+@app.route('/control_panel/manage_feature', methods = ['POST'])
+def manage_feature_AccessDB():
+
+	user_id = session['user_id']
+
+	try:
+		if_upvote_allowed = bool(request.form['ifupvote'])
+	except:
+		if_upvote_allowed = None
+
+	if if_upvote_allowed != None:
+		g.conn.execute("UPDATE DEVS_PRODUCTS SET if_upvote_allowed = %s WHERE user_id = %s", if_upvote_allowed, user_id)
+	
+	try:
+		if_downvote_allowed = bool(request.form['ifdownvote'])
+	except:
+		if_downvote_allowed = None
+
+	if if_downvote_allowed != None:
+		g.conn.execute("UPDATE DEVS_PRODUCTS SET if_downvote_allowed = %s WHERE user_id = %s", if_downvote_allowed, user_id)
+	
+	try:
+		max_votes = bool(request.form['maxvote'])
+	except:
+		max_votes = None
+
+	if max_votes != None:
+		g.conn.execute("UPDATE DEVS_PRODUCTS SET max_votes = %s WHERE user_id = %s", max_votes, user_id)
+	
+	try:
+		if_user_generated_feature_request_allowed = bool(request.form['ifpostfeature'])
+	except:
+		if_user_generated_feature_request_allowed = None
+
+	if if_user_generated_feature_request_allowed != None:
+		g.conn.execute("UPDATE DEVS_PRODUCTS SET if_upvote_allowed = %s WHERE user_id = %s", if_user_generated_feature_request_allowed, user_id)
+
+	try:
+		if_followup_allowed = bool(request.form['ifpostfollowup'])
+	except:
+		if_followup_allowed = None
+
+	if if_followup_allowed != None:
+		g.conn.execute("UPDATE DEVS_PRODUCTS SET if_upvote_allowed = %s WHERE user_id = %s", if_followup_allowed, user_id)
+
 	return render_template('manage_feature.html')
 ##
 @app.route('/control_panel/manage_section', methods = ['GET'])
 def manage_section():
-	return render_template('manage_section.html')
+	try:
+		user_id = session['user_id']
+		username = session['username']
+		if_dev = session['if_dev']
+	except:
+		return redirect(url_for('index'))
+
+	ifLoggedOn = True
+
+	if if_dev != True:
+		return redirect(url_for('index'))
+
+	cur = g.conn.execute('SELECT section_id, section_name, D.product_id FROM DEVS_PRODUCTS D, SECTIONS_NEW S WHERE D.user_id = %s AND D. product_id = S.product_id', user_id)
+	
+	section_id = []
+	section_name = []
+	product_id = None
+
+	for i in cur:
+		section_id.append(i[0])
+		section_name.append(i[1])
+		product_id = i[2]
+
+	section_seq = range(0, len(section_id))
+
+	return render_template('manage_section.html', username = username, ifLoggedOn = ifLoggedOn, if_dev = if_dev, section_seq = section_seq, section_id = section_id, section_name = section_name, product_id = product_id)
+##
+@app.route('/control_panel/manage_section', methods = ['POST'])
+def manage_section_AccessDB():
+	try:
+		selected_section_id = request.form['selectedsection']
+		product_id = request.form['productid']
+	except:
+		return redirect(url_for('manage_section'))
+
+	try:
+		g.conn.execute('DELETE FROM SECTIONS_NEW WHERE section_id = %s', selected_section_id)
+	except:
+		return 'Unable to Complete the Operation: Please Archive the Section in the Advanced Tools Section Before Attempt'
+
+	return redirect(url_for('manage_section'))
+##
+@app.route('/control_panel/add_section', methods = ['POST'])
+def add_section_AccessDB():
+	try:
+		new_section = request.form['newsection']
+		product_id = request.form['productid']
+	except:
+		return redirect(url_for('manage_section'))
+
+	g.conn.execute('INSERT INTO SECTIONS_NEW VALUES(DEFAULT, %s, %s)', product_id, new_section)
+
+	return redirect(url_for('manage_section'))
 ##
 @app.route('/control_panel/analysis', methods = ['GET'])
 def analyze():

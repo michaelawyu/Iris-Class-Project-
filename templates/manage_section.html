@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Iris</title>
-	<link rel="stylesheet" type="text/css" href="../static/manage_section.css">
+	<link rel="stylesheet" type="text/css" href="../static/CSS/manage_section.css">
 </head>
 <body>
 	<div id="header">
@@ -33,16 +33,20 @@
 		</div>
 		<div id="rightpanel">
 			<div id="add_section">
-				<form action="add_section" method="POST">
+				<form action="/control_panel/add_section" method="POST">
 					<input id="add_section" type="text" name="newsection"></input>
+					<input type="hidden" name="productid" value="{{ product_id }}"></input>
 					<input id="submit_button_newsection" type="submit" name="submit_button_newsection" value="Add"></input>
 				</form>
 			</div>
-			<form action="/manage_section" method="POST">
+			<form action="/control_panel/manage_section" method="POST">
+				{% for i in section_seq %}
 				<div id="feature">
-					<input class="stdcheckbox" type="radio" name="ifupvote" value="True"/>
-					<p class="checkboxtext">Apps and Subscriptions</p>
+					<input class="stdcheckbox" type="radio" name="selectedsection" value="{{ section_id[i] }}"/>
+					<p class="checkboxtext">{{ section_name[i] }}</p>
 				</div>
+				{% endfor%}
+				<input type="hidden" name="productid" value="{{ product_id }}"></input>
 				<input id="submit_button" type="submit" name="submit_button" value="Submit" />
 			</form>
 		</div>

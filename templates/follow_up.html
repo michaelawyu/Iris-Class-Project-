@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Iris</title>
-	<link rel="stylesheet" type="text/css" href="../static/follow_up.css">
+	<link rel="stylesheet" type="text/css" href="../static/CSS/follow_up.css">
 </head>
 <body>
 	<div id="header">
@@ -25,8 +25,13 @@
 	<div id="body">
 		<div id="leftpanel">
 			<div id="entry">
-				<p id="section">{{ section_name }}</p>
+				<a href="/review?section_id=0"><p id="section">All Posts</p></a>
 			</div>
+			{% for i in section_seq %}
+			<div id="entry">
+				<a href="/review?section_id={{section_id[i]}}"><p id="section">{{ section_name[i] }}</p></a>
+			</div>
+			{% endfor %}
 		</div>
 		<div id="rightpanel">
 			{% if ifnotice%}
@@ -38,12 +43,6 @@
 				<div id="scorepanel">
 					<p id="score_title">VOTES</p>
 					<p id="score">{{ upvotes - downvotes }}</p>
-					<div id="uparrow">
-						<img src="../static/uparrow.png" class="uparrow">
-					</div>
-					<div id="downarrow">
-						<img src="../static/downarrow.png" class="downarrow">
-					</div>
 				</div>
 				<div id="posttitle">
 					<p id="posttitle">{{ post_title }}</p>
@@ -72,13 +71,12 @@
 			</div>
 			{% endif %}
 			<div id="publish">
-				<form action="/followup_addpost" method="POST">
-					<input id="requesttitle" type="text" name="requesttitle" value="Title"></input>
-					<textarea id="requestcontent" name="requestcontent">Deliberate Your Idea Here :)</textarea> 
+				<form action="/add_followup" method="POST">
+					<input id="requesttitle" type="text" name="followuptitle" value="Title"></input>
+					<textarea id="requestcontent" name="followupcontent">Deliberate Your Idea Here :)</textarea> 
 					<input id="requestsubmit" type="submit" name="requestsubmit"></input>
 					<input type="hidden" name="postid" value="{{ post_id }}" />
-					<input type="hidden" name="sectionid" value="{{ section_id }}" />
-					<input type="hidden" name="sectionname" value="{{ section_name }}" />
+					<input type="hidden" name="currentsectionid" value="{{ current_section_id }}" />
 					<input type="hidden" name="productid" value="{{ product_id }}" />
 					<input type="hidden" name="upvote" value="{{ upvotes }}" />
 					<input type="hidden" name="downvote" value="{{ downvotes }}" />
@@ -86,7 +84,7 @@
 					<input type="hidden" name="postcontent" value="{{ post_content }}" />
 				</form>
 			</div>
-			{% for i in follow_up_seq%}
+			{% for i in follow_up_seq %}
 			<div id="follow_up">
 				<div id="followup_title">
 					<p id="followup_title">Follow-Up</p>

@@ -49,19 +49,19 @@
 		<script type="text/javascript">
 		var ctx = document.getElementById("topic_extraction_chart").getContext("2d");
 		var data = {
-			labels: ["Nov 9th","Nov 10th","Nov 11st","Nov 12nd","Nov 13rd","Nov 14th"],
+			labels: ["XBOX","Music","Live Subscription","LIVE","XBOX LIVE","Games"],
 			datasets: [{
 				label:"TestDataset",
-            	fillColor: "rgba(220,220,220,"+"0.2)",
+            	fillColor: "rgba(4,115,208,0.2)",
             	strokeColor: "rgba(220,220,220,0.9)",
             	pointColor: "rgba(220,220,220,0.9)",
             	pointStrokeColor: "#fff",
             	pointHighlightFill: "#fff",
             	pointHighlightStroke: "rgba(220,220,220)",
-            	data: [100,80,30,50,40,35]
+            	data: [0.87,0.66,0.44,0.32,0.21,0.19]
 			},]
 		}
-		var myNewChart = new Chart(ctx).Line(data);
+		var myNewChart = new Chart(ctx).Bar(data);
 		</script>
 	</div>
 </body>

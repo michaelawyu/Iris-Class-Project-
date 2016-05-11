@@ -1,13 +1,13 @@
 @font-face {
 	font-family: 'MyriadPro';
-	src: url('MyriadPro.otf');
+	src: url('../MyriadPro.otf');
 }
 @font-face {
 	font-family: 'MyriadPro Thin';
-	src: url('MyriadPro Thin.otf');
+	src: url('../MyriadPro Thin.otf');
 }
 div.upperbody{
-	background-image: url("index_spotlight.jpeg");
+	background-image: url("../index_spotlight.jpeg");
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-size: 100%;

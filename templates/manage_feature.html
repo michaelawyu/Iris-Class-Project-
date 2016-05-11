@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Iris</title>
-	<link rel="stylesheet" type="text/css" href="../static/manage_feature.css">
+	<link rel="stylesheet" type="text/css" href="../static/CSS/manage_feature.css">
 </head>
 <body>
 	<div id="header">
@@ -32,28 +32,58 @@
 			</div>
 		</div>
 		<div id="rightpanel">
-			<form action="/manage_feature" method="POST">
+			<form action="/control_panel/manage_feature" method="POST">
 			<div id="feature">
-				<input class="stdcheckbox" type="checkbox" name="ifupvote" value="True"/>
-				<p class="checkboxtext">Allow users to vote for a feature</p>
+				{% if controls[0] %}
+					<input class="stdcheckbox" type="checkbox" name="ifupvote" value="True" checked="checked" />
+					<p class="checkboxtext">Allow users to vote for a feature</p>
+				{% endif %}
+				{% if controls[0] == False %}
+					<input class="stdcheckbox" type="checkbox" name="ifupvote" value="True" checked="checked"/>
+					<p class="checkboxtext">Allow users to vote for a feature</p>
+				{% endif %}
 			</div>
 			<div id="feature">
+				{% if controls[0] %}
+				<input class="stdcheckbox" type="checkbox" name="ifdownvote" value="True" checked="checked"/>
+				<p class="checkboxtext">Allow users to vote against a feature</p>
+				{% endif %}
+				{% if controls[0] == False %}
 				<input class="stdcheckbox" type="checkbox" name="ifdownvote" value="True"/>
 				<p class="checkboxtext">Allow users to vote against a feature</p>
+				{% endif %}
 			</div>
 			<div id="feature">
-				<input class="stdcheckbox" type="checkbox" name="ifdownvote" value="True"/>
+				{% if controls[0] %}
+				<input class="stdcheckbox" type="checkbox" name="maxvote" value="3" checked="checked"/>
 				<p class="checkboxtext">One user may cast at most 3 votes</p>
+				{% endif %}
+				{% if controls[0] == False %}
+				<input class="stdcheckbox" type="checkbox" name="maxvote" value="3"/>
+				<p class="checkboxtext">One user may cast at most 3 votes</p>
+				{% endif %}
 			</div>
 			<div id="feature">
-				<input class="stdcheckbox" type="checkbox" name="ifdownvote" value="True"/>
+				{% if controls[0] %}
+				<input class="stdcheckbox" type="checkbox" name="ifpostfeature" value="True" checked="checked"/>
 				<p class="checkboxtext">Users may post new feature requests</p>
+				{% endif %}
+				{% if controls[0] == False %}
+				<input class="stdcheckbox" type="checkbox" name="ifpostfeature" value="True"/>
+				<p class="checkboxtext">Users may post new feature requests</p>
+				{% endif %}
 			</div>
 			<div id="feature">
-				<input class="stdcheckbox" type="checkbox" name="ifdownvote" value="True"/>
+				{% if controls[0] %}
+				<input class="stdcheckbox" type="checkbox" name="ifpostfollowup" value="True" checked="checked"/>
 				<p class="checkboxtext">Users may post follow-ups to a feature request</p>
+				{% endif %}
+				{% if controls[0] == False %}
+				<input class="stdcheckbox" type="checkbox" name="ifpostfollowup" value="True"/>
+				<p class="checkboxtext">Users may post follow-ups to a feature request</p>
+				{% endif %}
 			</div>
-			<input id="submit_button" type="submit" name="submit_button" value="Submit" />
+			<input id="submit_button" type="submit" name="submit_button" value="Submit" checked="checked"/>
 			</form>
 		</div>
 	</div>
