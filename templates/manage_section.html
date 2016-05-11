@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Iris</title>
+	<link rel="stylesheet" type="text/css" href="../static/manage_section.css">
+</head>
+<body>
+	<div id="header">
+		<a href="/"><img src="../static/logo.png" class="logo" alt="Logo of Iris"></a>
+		<ul>
+			<li id="HeaderOne"><a class="headerlink" href="/review">Review</a></li>
+			<li id="HeaderTwo"><a class="headerlink" href="/about">About</a></li>
+			{% if ifLoggedOn == True %}
+				<li id="HeaderThree">{{ username }}</li>
+				<a href="/logout"><img src="../static/logout.png" class="LogoutIcon" alt="Log Out"></a>
+			{% endif %}
+			{% if ifLoggedOn == False %}
+				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
+			{% endif %}
+			{% if ifdev == True %}
+				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+			{% endif %}
+		</ul>
+	</div>
+	<div id="body">
+		<div id="leftpanel">
+			<div id="entry">
+				<p id="section">Overview</p>
+			</div>
+			<div id="entry">
+				<p id="section">Analysis</p>
+			</div>
+		</div>
+		<div id="rightpanel">
+			<div id="add_section">
+				<form action="add_section" method="POST">
+					<input id="add_section" type="text" name="newsection"></input>
+					<input id="submit_button_newsection" type="submit" name="submit_button_newsection" value="Add"></input>
+				</form>
+			</div>
+			<form action="/manage_section" method="POST">
+				<div id="feature">
+					<input class="stdcheckbox" type="radio" name="ifupvote" value="True"/>
+					<p class="checkboxtext">Apps and Subscriptions</p>
+				</div>
+				<input id="submit_button" type="submit" name="submit_button" value="Submit" />
+			</form>
+		</div>
+	</div>
+</body>
+</html>

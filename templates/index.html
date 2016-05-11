@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Iris</title>
+	<link rel="stylesheet" type="text/css" href="../static/CSS/index.css">
+</head>
+<body>
+	<div id="header">
+		<a href="/"><img src="../static/logo.png" class="logo" alt="Logo of Iris"></a>
+		<ul>
+			<li id="HeaderOne"><a class="headerlink" href="/review">Review</a></li>
+			<li id="HeaderTwo"><a class="headerlink" href="/about">About</a></li>
+			{% if ifLoggedOn == True %}
+				<li id="HeaderThree">{{ username }}</li>
+				<a href="/logout"><img src="../static/logout.png" class="LogoutIcon" alt="Log Out"></a>
+			{% endif %}
+			{% if ifLoggedOn == False %}
+				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
+			{% endif %}
+			{% if if_dev == True %}
+				<li id="HeaderFour"><a class="headerlink" href="/control_panel">Control Panel</a></li>
+			{% endif %}
+		</ul>
+	</div>
+	<div id="body">
+		<div class="upperbody">
+			<p class="Intro">Introducing</p>
+			<p class="Title">Iris</p>
+			<p class="Description">Brainstorm. On the scale of millions.</p>
+			<h3 class="LearnMore"><a class="headerlink" href="/about">Learn More</a></h3>
+		</div>
+		<div class="lowerbody">
+			<div class="icons">
+				<img src="../static/index_icon_coop.png" class="IconCoop">
+				<img src="../static/index_icon_customize.png" class="IconCustomize">
+				<img src="../static/index_icon_analysis.png" class="IconAnalysis">
+				<p id="IconCoopTitle">COOPERATION</p>
+				<p id="IconCoopDes">Iris encourages the interaction between users and developers. With the help of your loyal customers, building the next golden feature has never been easier.</p>
+				<p id="IconCustTitle">CUSTOMIZATION</p>
+				<p id="IconCustDes">Iris grants developers full control over the means of communication. Feel free to experiment many options Iris offers.</p>
+				<p id="IconAnTitle">ANALYSIS</p>
+				<p id="IconAnDes">Iris has analytical capabilities built in. Natural Language Processing tools will help you easily discover pain points that you never think of.</p>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

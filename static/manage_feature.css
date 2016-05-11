@@ -1,0 +1,193 @@
+@font-face {
+	font-family: 'MyriadPro';
+	src: url('MyriadPro.otf');
+}
+@font-face {
+	font-family: 'MyriadPro Thin';
+	src: url('MyriadPro Thin.otf');
+}
+body{
+	background-color: rgb(250, 250, 250);
+}
+div#leftpanel{
+	background-color: hsla(0,0%,0%, 0.5);
+	width: 20%;
+	height: 100%;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	border-width: 0px;
+	border-color: red;
+	border-style: solid;
+	z-index: 10;
+}
+div#entry{
+	width: 100%;
+	height: 50px;
+	position: relative;
+	top: 55px;
+	border-width: 0px;
+	border-color: red;
+	border-style: solid;
+	background-color: #999999;
+}
+p#section{
+	font-family: "MyriadPro Thin";
+	font-size: 18px;
+	position: absolute;
+	width: 100%;
+	top: -4px;
+	border-color: black;
+	border-style: solid;
+	border-width: 0px;
+	text-align: center;
+	color: white;
+}
+div#rightpanel{
+	width: 76%;
+	height: 100%;
+	position: absolute;
+	left: 22%;
+	border-color: red;
+	border-style: solid;
+	border-width: 0px;
+}
+div#feature{
+	width: 100%;
+	height: 50px;
+	position: relative;
+	top: 60px;
+	left: 0px;
+	background-color: white;
+	box-shadow: 2px 2px 3px 3px #cccccc;
+	border-color: red;
+	border-style: solid;
+	border-width: 0px;
+}
+input.stdcheckbox{
+	height: 50px;
+	width: 100px;
+	top: -3px;
+	left: -2px;
+	position: absolute;
+	-webkit-appearance: none;
+	display: inline-block;
+	background: url('disabled_button.jpg');
+	border-color: red;
+	border-style: solid;
+	border-width: 0px;
+	box-shadow: 1px 1px 1px 1px #cccccc;
+}
+input.stdcheckbox:checked{
+	height: 50px;
+	width: 100px;
+	top: -3px;
+	left: -2px;
+	position: absolute;
+	-webkit-appearance: none;
+	display: inline-block;
+	background: url('enabled_button.jpg');
+	border-color: red;
+	border-style: solid;
+	border-width: 0px;
+	box-shadow: 1px 1px 1px 1px #cccccc;
+}
+p.checkboxtext{
+	font-family: "MyriadPro";
+	font-size: 18px;
+	position: absolute;
+	left: 115px;
+	top: 0%;
+	margin-top: 16px;
+	color: #262626;
+}
+input#submit_button{
+	bottom: 8%;
+	right: 10px;
+	position: absolute;
+	border: none;
+	width: 100px;
+	height: 50px;
+	background: hsla(207, 98%, 42%, 0.8);
+	box-shadow: 1px 1px 1px 1px #cccccc;
+	font-family: "MyriadPro";
+	font-size: 18px;
+	color: white;
+
+}
+div#header{
+	background-color: hsla(207, 98%, 42%, 1);
+	padding: 10px;
+	width: 100%;
+	height: 35px;
+	margin: 0px;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 20;
+}
+
+a.headerlink:link{
+	text-decoration: none;
+	color: white;
+}
+a.headerlink:visited{
+	text-decoration: none;
+	color: white;
+}
+li{
+	font-family: "MyriadPro", Helvetica;
+	font-size: 20px;
+}
+li#HeaderOne{
+	display: inline;
+	padding: 5px;
+	position: fixed;
+	top: 12px;
+	left: 150px;
+}
+li#HeaderTwo{
+	display: inline;
+	padding: 5px;
+	position: fixed;
+	top: 12px;
+	left: 275px;
+}
+li#HeaderThree{
+	display: inline;
+	padding: 5px;
+	position: fixed;
+	top: 12px;
+	right: 120px;
+}
+li#HeaderFour{
+	display: inline;
+	padding: 5px;
+	position: fixed;
+	top: 12px;
+	left: 400px;
+}
+img.logo{
+	width: 47px;
+	height: 40px;
+	float: left;
+	position: fixed;
+	top: 5px;
+	left: 44px;
+}
+img.LogoutIcon{
+	width: 42px;
+	height: 40px;
+	float: right;
+	position: fixed;
+	top: 7px;
+	right: 44px;
+}
+img.LoginIcon{
+	width: 40px;
+	height: 38px;
+	float: right;
+	position: fixed;
+	top: 7px;
+	right: 44px;
+}

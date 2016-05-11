@@ -1,0 +1,270 @@
+@font-face {
+	font-family: 'MyriadPro';
+	src: url('MyriadPro.otf');
+}
+@font-face {
+	font-family: 'MyriadPro Thin';
+	src: url('MyriadPro Thin.otf');
+}
+div.upperbody{
+	background-image: url("index_spotlight.jpeg");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100%;
+	width: 100%;
+	height: 450px;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	margin-top: 0px;
+	margin-left: 0px;
+	padding: 0px;
+	border-width: 0px;
+	border-color: red;
+	border-style: solid;
+	z-index: 10;
+}
+div.lowerbody{
+	background-color: #fafafa;
+	width: 100%;
+	height: 400px;
+	position: absolute;
+	top: 450px;
+	left: 0px;
+	margin-top: 0px;
+	margin-left: 0px;
+	border-width: 0px;
+	border-style: solid;
+	border-color: red;
+}
+h3.About{
+	font-family: "MyriadPro Thin";
+	position: absolute;
+	color: black;
+	top: 0px;
+	left: 0px;
+	font-size: 20px;
+}
+p.Intro{
+	font-family: "MyriadPro Thin", Helvetica;
+	color: white;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -120px;
+	margin-left: -65px;
+	font-size: 28px;
+	text-shadow: 2px 2px 0px #000000;
+}
+p.Title{
+	font-family: "MyriadPro", Helvetica;
+	color: white;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -75px;
+	margin-left: -65px;
+	font-size: 108px;
+	text-shadow: 2px 2px 0px #000000;
+}
+p.Description{
+	font-family: "MyriadPro Thin", Helvetica;
+	color: white;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: 50px;
+	margin-left: -185px;
+	font-size: 28px;
+	text-shadow: 2px 2px 0px #000000;
+}
+h3.LearnMore{
+	font-family: "MyriadPro Thin";
+	position: absolute;
+	color: white;
+	top: 50%;
+	left: 50%;
+	width: 96px;
+	height: 20px;
+	border-width: 0px;
+	border-style: solid;
+	padding: 10px;
+	border-radius: 0px;
+	background-color: hsla(207, 98%, 42%, 1);
+	text-shadow: 1px 1px 3px #666666;
+	margin-top: 120.5px;
+	margin-left: -57.5px;
+}
+div.icons{
+	position: absolute;
+	width: 1000px;
+	height: 300px;
+	border-color: red;
+	border-width: 0px;
+	border-style: solid;
+	margin-top: -150px;
+	margin-left: -500px;
+	top: 50%;
+	left: 50%;
+}
+img.IconCoop{
+	position: absolute;
+	width: 180px;
+	height: 160px;
+	border-width: 3px;
+	border-color: black;
+	top: 0px;
+	left: 30px;
+}
+img.IconCustomize{
+	position: absolute;
+	width: 180px;
+	height: 155px;
+	left: 400px;
+	border-width: 3px;
+	border-color: black;
+}
+img.IconAnalysis{
+	position: absolute;
+	width: 180px;
+	height: 170px;
+	left: 770px;
+	border-width: 3px;
+	border-color: black;
+}
+p#IconCoopTitle{
+	font-family: "MyriadPro Thin";
+	color: black;
+	font-size: 20px;
+	text-shadow: 0.5px 0.5px 0px #666666;
+	position: absolute;
+	top: 160px;
+	left: 60px;
+}
+p#IconCoopDes{
+	font-family: "MyriadPro Thin";
+	color: black;
+	font-size: 18px;
+	text-shadow: 0.5px 0.5px 0px #666666;
+	position: absolute;
+	width: 300px;
+	top: 200px;
+	left: -30px;
+	text-align: center;
+}
+p#IconCustTitle{
+	font-family: "MyriadPro Thin";
+	color: black;
+	font-size: 20px;
+	text-shadow: 0.5px 0.5px 0px #666666;
+	position: absolute;
+	top: 160px;
+	left: 430px;
+}
+p#IconCustDes{
+	font-family: "MyriadPro Thin";
+	color: black;
+	font-size: 18px;
+	text-shadow: 0.5px 0.5px 0px #666666;
+	position: absolute;
+	width: 300px;
+	top: 200px;
+	left: 350px;
+	text-align: center;
+}
+p#IconAnTitle{
+	font-family: "MyriadPro Thin";
+	color: black;
+	font-size: 20px;
+	text-shadow: 0.5px 0.5px 0px #666666;
+	position: absolute;
+	top: 160px;
+	left: 830px;
+}
+p#IconAnDes{
+	font-family: "MyriadPro Thin";
+	color: black;
+	font-size: 18px;
+	text-shadow: 0.5px 0.5px 0px #666666;
+	position: absolute;
+	width: 300px;
+	top: 200px;
+	left: 720px;
+	text-align: center;
+}
+div#header{
+	background-color: hsla(207, 98%, 42%, 0.8);
+	padding: 10px;
+	width: 100%;
+	height: 35px;
+	margin: 0px;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 20;
+}
+a.headerlink:link{
+	text-decoration: none;
+	color: white;
+}
+a.headerlink:visited{
+	text-decoration: none;
+	color: white;
+}
+li{
+	font-family: "MyriadPro", Helvetica;
+	font-size: 20px;
+}
+li#HeaderOne{
+	display: inline;
+	padding: 5px;
+	position: fixed;
+	top: 12px;
+	left: 150px;
+}
+li#HeaderTwo{
+	display: inline;
+	padding: 5px;
+	position: fixed;
+	top: 12px;
+	left: 275px;
+}
+li#HeaderThree{
+	display: inline;
+	padding: 5px;
+	position: fixed;
+	top: 12px;
+	right: 120px;
+	color: white;
+}
+li#HeaderFour{
+	display: inline;
+	padding: 5px;
+	position: fixed;
+	top: 12px;
+	left: 400px;
+}
+img.logo{
+	width: 47px;
+	height: 40px;
+	float: left;
+	position: fixed;
+	top: 5px;
+	left: 44px;
+}
+img.LogoutIcon{
+	width: 42px;
+	height: 40px;
+	float: right;
+	position: fixed;
+	top: 7px;
+	right: 44px;
+}
+img.LoginIcon{
+	width: 40px;
+	height: 38px;
+	float: right;
+	position: fixed;
+	top: 7px;
+	right: 44px;
+}

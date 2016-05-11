@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Iris</title>
+	<link rel="stylesheet" type="text/css" href="../static/follow_up.css">
+</head>
+<body>
+	<div id="header">
+		<a href="/"><img src="../static/logo.png" class="logo" alt="Logo of Iris"></a>
+		<ul>
+			<li id="HeaderOne"><a class="headerlink" href="/review">Review</a></li>
+			<li id="HeaderTwo"><a class="headerlink" href="/about">About</a></li>
+			{% if ifLoggedOn == True %}
+				<li id="HeaderThree">{{ username }}</li>
+				<a href="/logout"><img src="../static/logout.png" class="LogoutIcon" alt="Log Out"></a>
+			{% endif %}
+			{% if ifLoggedOn == False %}
+				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
+			{% endif %}
+			{% if ifdev == True %}
+				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+			{% endif %}
+		</ul>
+	</div>
+	<div id="body">
+		<div id="leftpanel">
+			<div id="entry">
+				<p id="section">{{ section_name }}</p>
+			</div>
+		</div>
+		<div id="rightpanel">
+			{% if ifnotice%}
+			<div id="notification">
+				<p id="notification">Operation Completed: Now It's Developer's Turn!</p>
+			</div>
+			{% endif %}
+			<div id="post">
+				<div id="scorepanel">
+					<p id="score_title">VOTES</p>
+					<p id="score">{{ upvotes - downvotes }}</p>
+					<div id="uparrow">
+						<img src="../static/uparrow.png" class="uparrow">
+					</div>
+					<div id="downarrow">
+						<img src="../static/downarrow.png" class="downarrow">
+					</div>
+				</div>
+				<div id="posttitle">
+					<p id="posttitle">{{ post_title }}</p>
+				</div>
+				<div id="postcontent">
+					<p id="postcontent">{{ post_content }}</p>
+				</div>
+
+				<div id="mis">
+					<img src="../static/avatar.png" class="avatar">
+					<p id="description">User and Timestamp Concealed</p>
+				</div>
+				<div id="poststatus">
+					<img src="../static/open.png" class="statusicon">
+				</div>
+			</div>
+			{% if ifdevanswered%}
+			<div id="dev_response">
+				<div id=dev_res_title>
+					<p id="dev_res_title">Developer's Response</p>
+				</div>
+				<div id="dev_response_content">
+					<p id="postcontent">We heard you. Background replay will be implemented in the next major release of XBOX system software.</p>
+				</div>
+				<img src="../static/checkmark.png" class="checkmark" >
+			</div>
+			{% endif %}
+			<div id="publish">
+				<form action="/followup_addpost" method="POST">
+					<input id="requesttitle" type="text" name="requesttitle" value="Title"></input>
+					<textarea id="requestcontent" name="requestcontent">Deliberate Your Idea Here :)</textarea> 
+					<input id="requestsubmit" type="submit" name="requestsubmit"></input>
+					<input type="hidden" name="postid" value="{{ post_id }}" />
+					<input type="hidden" name="sectionid" value="{{ section_id }}" />
+					<input type="hidden" name="sectionname" value="{{ section_name }}" />
+					<input type="hidden" name="productid" value="{{ product_id }}" />
+					<input type="hidden" name="upvote" value="{{ upvotes }}" />
+					<input type="hidden" name="downvote" value="{{ downvotes }}" />
+					<input type="hidden" name="posttitle" value="{{ post_title }}" />
+					<input type="hidden" name="postcontent" value="{{ post_content }}" />
+				</form>
+			</div>
+			{% for i in follow_up_seq%}
+			<div id="follow_up">
+				<div id="followup_title">
+					<p id="followup_title">Follow-Up</p>
+				</div>
+				<div id="followup_content">
+					<p id="postcontent">{{ follow_ups[i] }}</p>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</body>
+</html>

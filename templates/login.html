@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Iris</title>
+	<link rel="stylesheet" type="text/css" href="../static/CSS/login.css">
+</head>
+<body>
+	<div id="header">
+		<a href="/"><img src="../static/logoBlack.png" class="logo" alt="Logo of Iris"></a>
+		<ul>
+			<li id="HeaderOne">Iris</li>
+			<li id="HeaderTwo">Brainstorm. On the scale of millions.</li>
+		</ul>
+	</div>
+	<div id="body">
+		<div id="leftpanel">
+		</div>
+		<div id="credentials">
+			<img src="../static/loginBlack.png" class="LoginIcon" alt="Log In">
+			<p id="Intro">Your Voice. Heard.</p>
+			<form action="/login" method="POST">
+				<input id="usernameinput" type="text" name="username" maxlength="20"></input>
+				<input id="passwdinput" type="password" name="password" maxlength="20"></input>
+				<input id="submitbutton" type="submit" name="submit_button" value="Sign in"></input>
+			</form>
+			<p id="status">{{ status }}</p>
+			<p id="register">Do not have an account? <a id="registerlink" href="/register">Sign up here. </a></p>
+		</div>
+	</div>
+</body>
+</html>

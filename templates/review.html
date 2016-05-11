@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Iris</title>
+	<link rel="stylesheet" type="text/css" href="../static/review.css">
+</head>
+<body>
+	<div id="header">
+		<a href="/"><img src="../static/logo.png" class="logo" alt="Logo of Iris"></a>
+		<ul>
+			<li id="HeaderOne"><a class="headerlink" href="/review">Review</a></li>
+			<li id="HeaderTwo"><a class="headerlink" href="/about">About</a></li>
+			{% if ifLoggedOn == True %}
+				<li id="HeaderThree">{{ username }}</li>
+				<a href="/logout"><img src="../static/logout.png" class="LogoutIcon" alt="Log Out"></a>
+			{% endif %}
+			{% if ifLoggedOn == False %}
+				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
+			{% endif %}
+			{% if ifdev == True %}
+				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+			{% endif %}
+		</ul>
+	</div>
+	<div id="body">
+		<div id="leftpanel">
+			<div id="entry">
+				<a href="/review?section=0"><p id="section">All Posts</p></a>
+			</div>
+			{% for i in section_seq %}
+			<div id="entry">
+				<a href="/review?section={{section_id[i]}}"><p id="section">{{ section_name[i] }}</p></a>
+			</div>
+			{% endfor %}
+		</div>
+		<div id="rightpanel">
+			{% if notice %}
+			<div id="notification">
+				<p id="notification">{{ notice }}</p>
+			</div>
+			{% endif %}
+			{% if controls[4] %}
+			<div id="publish">
+				<form action="/review_addpost" method="POST">
+					<input id="requesttitle" type="text" name="request_title" value="Title"></input>
+					<textarea id="requestcontent" name="request_content">Deliberate Your Idea Here :)</textarea> 
+					<input type="hidden" name="section_id" value="{{ current_section_id }}"/>
+					<input type="hidden" name="product_id" value="{{ product_id }}"/>
+					<input id="requestsubmit" type="submit" name="request_submit"></input>
+				</form>
+			</div>
+			{% endif %}
+			{% for i in post_seq %}
+			<div id="post">
+				<div id="scorepanel">
+					<p id="score_title">VOTES</p>
+					<p id="score">{{  upvotes[i] - downvotes[i] }}</p>
+					{% if controls[0] %}
+					<div id="uparrow">
+						<form action="/review_addvote" method="POST">
+							<input type="hidden" name="upvotes" value="{{ upvotes[i] + 1 }}" />
+							<input type="hidden" name="downvotes" value="{{ downvotes[i] }}" />
+							<input type="hidden" name="post_id" value="{{ post_id[i] }}" />
+							<input type="hidden" name="section_id" value="{{ current_section_id }}" />
+							<input type="hidden" name="product_id" value="{{ product_id }}"/>
+							<input type="hidden" name="vote_type" value="upvote"/>
+							<input id="uparrow" type="submit" name="submit" value="" />
+						</form>
+						<img src="../static/uparrow.png" class="uparrow">
+					</div>
+					{% endif %}
+					{% if controls[1] %}
+					<div id="downarrow">
+						<form action="/review_addvote" method="POST">
+							<input type="hidden" name="upvotes" value="{{ upvotes[i] }}" />
+							<input type="hidden" name="downvotes" value="{{ downvotes[i] + 1 }}" />
+							<input type="hidden" name="post_id" value="{{ post_id[i] }}" />
+							<input type="hidden" name="section_id" value="{{ section_id }}" />
+							<input type="hidden" name="product_id" value="{{ product_id }}"/>
+							<input type="hidden" name="vote_type" value="downvote"/>
+							<input id="downarrow" type="submit" name="submit" value="" />
+						</form>
+						<img src="../static/downarrow.png" class="downarrow">
+					</div>
+					{% endif %}
+				</div>
+				<div id="posttitle">
+					<p id="posttitle">{{ post_title[i] }}</p>
+				</div>
+				<div id="postcontent">
+					<p id="postcontent">{{ post_content[i]}} </p>
+				</div>
+
+				<div id="mis">
+					<img src="../static/avatar.png" class="avatar">
+					<p id="description">{{ usernames[i] }} Published at {{ post_time[i] }}</p>
+					<form action="/followup" method="POST">
+						<input type="hidden" name="postid" value="{{ post_id[i] }}" />
+						<input type="hidden" name="sectionid" value="{{ current_section_id }}" />
+						<input type="hidden" name="productid" value="{{ product_id }}" />
+						<input type="hidden" name="upvote" value="{{ upvotes[i] }}" />
+						<input type="hidden" name="downvote" value="{{ downvotes[i] }}" />
+						<input type="hidden" name="posttitle" value="{{ post_title[i] }}" />
+						<input type="hidden" name="postcontent" value="{{ post_content[i] }}" />
+						<input id="discussionlink" type="submit" value="Discussion"/>
+					</form>
+				</div>
+				<div id="poststatus">
+					<img src="../static/open.png" class="statusicon">
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</body>
+</html>

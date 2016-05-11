@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Iris</title>
+	<link rel="stylesheet" type="text/css" href="../static/register_product.css">
+</head>
+<body>
+	<div id="header">
+		<a href="/"><img src="../static/logo.png" class="logo" alt="Logo of Iris"></a>
+		<ul>
+			<li id="HeaderOne"><a class="headerlink" href="/review">Review</a></li>
+			<li id="HeaderTwo"><a class="headerlink" href="/about">About</a></li>
+			{% if ifLoggedOn == True %}
+				<li id="HeaderThree">{{ username }}</li>
+				<a href="/logout"><img src="../static/logout.png" class="LogoutIcon" alt="Log Out"></a>
+			{% endif %}
+			{% if ifLoggedOn == False %}
+				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
+			{% endif %}
+			{% if ifdev == True %}
+				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+			{% endif %}
+		</ul>
+	</div>
+	<div id="body">
+		<div id="leftpanel">
+			<div id="entry">
+				<p id="section">Registration</p>
+			</div>
+		</div>
+		<div id="rightpanel">
+			{% for i in seq %}
+			<div id="product">
+				<div id="product_image">
+					<img id="product_image" src="../static/productimage_windows10m.jpg">
+				</div>
+				<div id="product_summary">
+					<p id="product_name">{{ product_name[i] }}</p>
+					<p id="product_dev">{{ developer_name[i] }}</p>
+				</div>
+				<form action="/register_product" method="POST">
+					<input id="register_product" type="submit" name="register_product" value="Join"/>
+					<input id="product_selected" type="hidden" name="product_selected" value="{{ product_id[i] }}" />
+				</form>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</body>
+</html>

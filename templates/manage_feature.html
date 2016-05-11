@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Iris</title>
+	<link rel="stylesheet" type="text/css" href="../static/manage_feature.css">
+</head>
+<body>
+	<div id="header">
+		<a href="/"><img src="../static/logo.png" class="logo" alt="Logo of Iris"></a>
+		<ul>
+			<li id="HeaderOne"><a class="headerlink" href="/review">Review</a></li>
+			<li id="HeaderTwo"><a class="headerlink" href="/about">About</a></li>
+			{% if ifLoggedOn == True %}
+				<li id="HeaderThree">{{ username }}</li>
+				<a href="/logout"><img src="../static/logout.png" class="LogoutIcon" alt="Log Out"></a>
+			{% endif %}
+			{% if ifLoggedOn == False %}
+				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
+			{% endif %}
+			{% if ifdev == True %}
+				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+			{% endif %}
+		</ul>
+	</div>
+	<div id="body">
+		<div id="leftpanel">
+			<div id="entry">
+				<p id="section">Overview</p>
+			</div>
+			<div id="entry">
+				<p id="section">Analysis</p>
+			</div>
+		</div>
+		<div id="rightpanel">
+			<form action="/manage_feature" method="POST">
+			<div id="feature">
+				<input class="stdcheckbox" type="checkbox" name="ifupvote" value="True"/>
+				<p class="checkboxtext">Allow users to vote for a feature</p>
+			</div>
+			<div id="feature">
+				<input class="stdcheckbox" type="checkbox" name="ifdownvote" value="True"/>
+				<p class="checkboxtext">Allow users to vote against a feature</p>
+			</div>
+			<div id="feature">
+				<input class="stdcheckbox" type="checkbox" name="ifdownvote" value="True"/>
+				<p class="checkboxtext">One user may cast at most 3 votes</p>
+			</div>
+			<div id="feature">
+				<input class="stdcheckbox" type="checkbox" name="ifdownvote" value="True"/>
+				<p class="checkboxtext">Users may post new feature requests</p>
+			</div>
+			<div id="feature">
+				<input class="stdcheckbox" type="checkbox" name="ifdownvote" value="True"/>
+				<p class="checkboxtext">Users may post follow-ups to a feature request</p>
+			</div>
+			<input id="submit_button" type="submit" name="submit_button" value="Submit" />
+			</form>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Iris</title>
+	<link rel="stylesheet" type="text/css" href="../static/sentiment_analysis_result.css">
+</head>
+<body>
+	<div id="header">
+		<a href="/"><img src="../static/logo.png" class="logo" alt="Logo of Iris"></a>
+		<ul>
+			<li id="HeaderOne"><a class="headerlink" href="/review">Review</a></li>
+			<li id="HeaderTwo"><a class="headerlink" href="/about">About</a></li>
+			{% if ifLoggedOn == True %}
+				<li id="HeaderThree">{{ username }}</li>
+				<a href="/logout"><img src="../static/logout.png" class="LogoutIcon" alt="Log Out"></a>
+			{% endif %}
+			{% if ifLoggedOn == False %}
+				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
+			{% endif %}
+			{% if ifdev == True %}
+				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+			{% endif %}
+		</ul>
+	</div>
+	<div id="body">
+		<div id="leftpanel">
+			<div id="entry">
+				<p id="section">Heatmap</p>
+			</div>
+		</div>
+		<div id="rightpanel">
+			<div id="post">
+				<div id="scorepanel">
+					<p id="score_title">VOTES</p>
+					<p id="score">5</p>
+					<div id="uparrow">
+						<img src="../static/uparrow.png" class="uparrow">
+					</div>
+					<div id="downarrow">
+						<img src="../static/downarrow.png" class="downarrow">
+					</div>
+				</div>
+				<div id="posttitle">
+					<p id="posttitle">This is a test feature</p>
+				</div>
+				<div id="postcontent">
+					<p id="postcontent">Iris is now under testing process. Hopefully it will complete soon.</p>
+				</div>
+
+				<div id="mis">
+					<img src="../static/avatar.png" class="avatar">
+					<p id="description">Username and Timestamp Concealed.</p>
+				</div>
+				<div id="poststatus">
+					<img src="../static/open.png" class="statusicon">
+				</div>
+			</div>
+			<div id="heatmap">
+				<div id="heatmap_title">
+					<div id="heatmap_score">
+						<p id="heatmap_score">0</p>
+					</div>
+					<p id="heatmap_title_1">analysis</p>
+					<p id="heatmap_title_2">NEUTRAL</p>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
