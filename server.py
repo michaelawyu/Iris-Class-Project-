@@ -2,6 +2,9 @@ import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response, make_response, url_for, session, flash
+import IrisNLPTopicExtractor
+import IrisNLPSentimentAnalysis
+import collections
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -11,6 +14,15 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 db_address = "postgresql+psycopg2://project:6156@127.0.0.1/Iris"
 
 engine = create_engine(db_address)
+
+global taglist
+global known_words
+global q_values
+global e_values
+global AFINN
+
+taglist, known_words, q_values, e_values = IrisNLPTopicExtractor.IrisNLPTopicExtractor_Train()
+AFINN = IrisNLPSentimentAnalysis.IrisNLPSentimentAnalysis_Load()
 
 @app.before_request
 def before_request():
@@ -595,16 +607,144 @@ def add_section_AccessDB():
 ##
 @app.route('/control_panel/analysis', methods = ['GET'])
 def analyze():
-	return render_template('analysis.html')
+	global taglist
+	global known_words
+	global q_values
+	global e_values
+
+	try:
+		user_id = session['user_id']
+		username = session['username']
+		if_dev = session['if_dev']
+	except:
+		return redirect(url_for('index'))
+
+	ifLoggedOn = True
+
+	if if_dev != True:
+		return redirect(url_for('index'))
+
+	cur = g.conn.execute('SELECT P.post_title, P.post_content FROM POSTS_NEW P, DEVS_PRODUCTS D WHERE D.user_id = %s AND D.product_id = P.product_id', user_id)
+
+	post_title = []
+	post_content = []
+
+	for i in cur:
+		post_title.append(i[0])
+		post_content.append(i[1])
+
+	f = open('exported_data' + str(user_id) + '.txt', 'w')
+	for i in range(0, len(post_title)):
+		f.write(post_title[i][:-1])
+		f.write(' \n')
+		f.write(post_content[i][:-1])
+		f.write(' \n')
+
+	f.close()
+	f = open('exported_data' + str(user_id) + '.txt', 'r')
+	data_to_tag = f.readlines()
+	f.close()
+	
+	IrisNLPTopicExtractor.IrisNLPTopicExtractor(data_to_tag, 'tagged_data' + str(user_id) + '.txt', taglist, known_words, q_values, e_values)
+
+	f = open('tagged_data' + str(user_id) + '.txt', 'r')
+	tagged_data = f.readlines()
+
+	tagged_words = []
+	lemmas = []
+	nouns = []
+	for sentence in tagged_data:
+		tagged_words = sentence.split(' ')
+		for word in tagged_words:
+			if word != '\r\n':
+				lemma = word.split('/')
+				if lemma[1] == 'NOUN':
+					nouns.append(lemma[0])
+
+	keyword_counter = collections.Counter(nouns)
+	most_frequent_keywords_with_count = keyword_counter.most_common(6)
+	keywords = []
+	counts = []
+	for pair in most_frequent_keywords_with_count:
+		keywords.append(pair[0])
+		counts.append(pair[1])
+
+	#print keywords
+	#print counts
+
+	return render_template('analysis.html', ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev, keywords = keywords, counts = counts)
 ##
 @app.route('/control_panel/sentiment_analysis_catalog', methods = ['GET'])
 def sentiment_analysis_catalog():
-	return render_template('sentiment_analysis_catalog.html')
+	try:
+		user_id = session['user_id']
+		username = session['username']
+		if_dev = session['if_dev']
+	except:
+		return redirect(url_for('index'))
+
+	ifLoggedOn = True
+
+	if if_dev != True:
+		return redirect(url_for('index'))
+
+	cur = g.conn.execute('SELECT P.post_title, P.post_id FROM POSTS_NEW P, DEVS_PRODUCTS D WHERE D.user_id = %s AND D.product_id = P.product_id', user_id)
+
+	post_title = []
+	post_id = []
+
+	for i in cur:
+		post_title.append(i[0])
+		post_id.append(i[1])
+
+	post_seq = range(0, len(post_id))
+
+	return render_template('sentiment_analysis_catalog.html', ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev, post_seq = post_seq, post_id = post_id, post_title = post_title)
 
 ##
 @app.route('/control_panel/sentiment_analysis_result', methods = ['GET'])
 def sentiment_analysis_result():
-	return render_template('sentiment_analysis_result.html')
+	global AFINN
+
+	try:
+		user_id = session['user_id']
+		username = session['username']
+		if_dev = session['if_dev']
+	except:
+		return redirect(url_for('index'))
+
+	ifLoggedOn = True
+
+	if if_dev != True:
+		return redirect(url_for('index'))
+
+	post_id = request.args['post_id']
+
+	cur = g.conn.execute('SELECT followup_content FROM FOLLOWUPS_NEW WHERE post_id = %s', post_id)
+
+	followup_contents = []
+	for i in cur:
+		followup_contents.append(i[0])
+
+	cur.close()
+	#print followup_contents
+
+	cur = g.conn.execute('SELECT post_title, post_content, upvotes, downvotes FROM POSTS_NEW WHERE post_id = %s', post_id)
+	
+	post_title = None
+	post_content = None
+	upvotes = None
+	downvotes = None
+	
+	for i in cur:
+		post_title = i[0]
+		post_content = i[1]
+		upvotes = int(i[2])
+		downvotes = int(i[3])
+
+	score = IrisNLPSentimentAnalysis.IrisNLPSentimentAnalysis(followup_contents, AFINN)
+
+	return render_template('sentiment_analysis_result.html', ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev, score = score, post_title = post_title, post_content = post_content, upvotes = upvotes, downvotes = downvotes)
 ##
 if __name__ == "__main__":
 	import click

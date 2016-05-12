@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Iris</title>
-	<link rel="stylesheet" type="text/css" href="../static/sentiment_analysis_result.css">
+	<link rel="stylesheet" type="text/css" href="../static/CSS/sentiment_analysis_result.css">
 </head>
 <body>
 	<div id="header">
@@ -32,24 +32,13 @@
 			<div id="post">
 				<div id="scorepanel">
 					<p id="score_title">VOTES</p>
-					<p id="score">5</p>
-					<div id="uparrow">
-						<img src="../static/uparrow.png" class="uparrow">
-					</div>
-					<div id="downarrow">
-						<img src="../static/downarrow.png" class="downarrow">
-					</div>
+					<p id="score">{{ upvotes + downvotes }}</p>
 				</div>
 				<div id="posttitle">
-					<p id="posttitle">This is a test feature</p>
+					<p id="posttitle">{{ post_title }}</p>
 				</div>
 				<div id="postcontent">
-					<p id="postcontent">Iris is now under testing process. Hopefully it will complete soon.</p>
-				</div>
-
-				<div id="mis">
-					<img src="../static/avatar.png" class="avatar">
-					<p id="description">Username and Timestamp Concealed.</p>
+					<p id="postcontent">{{ post_content }}</p>
 				</div>
 				<div id="poststatus">
 					<img src="../static/open.png" class="statusicon">
@@ -58,10 +47,18 @@
 			<div id="heatmap">
 				<div id="heatmap_title">
 					<div id="heatmap_score">
-						<p id="heatmap_score">0</p>
+						<p id="heatmap_score">{{ score }}</p>
 					</div>
 					<p id="heatmap_title_1">analysis</p>
+					{% if score < -20 %}
+					<p id="heatmap_title_2">NEGATIVE</p>
+					{% endif %}
+					{% if score > 20 %}
+					<p id="heatmap_title_2">POSITIVE</p>
+					{% endif %}
+					{% if score <= 20 and score >= -20 %}
 					<p id="heatmap_title_2">NEUTRAL</p>
+					{% endif %}
 				</div>
 
 			</div>

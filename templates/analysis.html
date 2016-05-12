@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Iris</title>
-	<link rel="stylesheet" type="text/css" href="../static/analysis.css">
+	<link rel="stylesheet" type="text/css" href="../static/CSS/analysis.css">
 </head>
 <body>
 	<div id="header">
@@ -49,7 +49,7 @@
 		<script type="text/javascript">
 		var ctx = document.getElementById("topic_extraction_chart").getContext("2d");
 		var data = {
-			labels: ["XBOX","Music","Live Subscription","LIVE","XBOX LIVE","Games"],
+			labels: ["{{keywords[0]}}","{{keywords[1]}}"],
 			datasets: [{
 				label:"TestDataset",
             	fillColor: "rgba(4,115,208,0.2)",
@@ -58,7 +58,7 @@
             	pointStrokeColor: "#fff",
             	pointHighlightFill: "#fff",
             	pointHighlightStroke: "rgba(220,220,220)",
-            	data: [0.87,0.66,0.44,0.32,0.21,0.19]
+            	data: [{{counts[0]}},{{counts[1]}}]
 			},]
 		}
 		var myNewChart = new Chart(ctx).Bar(data);

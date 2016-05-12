@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Iris</title>
-	<link rel="stylesheet" type="text/css" href="../static/sentiment_analysis_catalog.css">
+	<link rel="stylesheet" type="text/css" href="../static/CSS/sentiment_analysis_catalog.css">
 </head>
 <body>
 	<div id="header">
@@ -32,11 +32,14 @@
 			</div>
 		</div>
 		<div id="rightpanel">
-			<form action="/control_panel/sentiment_analysis_result">
+			{% for i in post_seq %}
+			<form action="/control_panel/sentiment_analysis_result", method="GET">
 			<div id="feature">
 				<input id="analyze_button" type="submit" name="analyze" value="Analyze"/>
-				<p class="checkboxtext">This is a test feature.</p>
+				<input type="hidden" name="post_id" value="{{ post_id[i] }}"></input>
+				<p class="checkboxtext">{{ post_title[i] }}</p>
 			</div>
+			{% endfor %}
 			</form>
 		</div>
 	</div>

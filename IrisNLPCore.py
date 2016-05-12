@@ -251,6 +251,7 @@ def viterbi(brown_dev_words, taglist, known_words, q_values, e_values):
                 transitionProbList[(START_SYMBOL, chosenState_1, tag)] = -1000
                 #print str(-1000)
             try:
+                #print sentence
                 stateProbList[sentence[3],tag] = e_values[sentence[3],tag]
                 #print stateProbList[sentence[3],tag]
             except:
@@ -391,6 +392,8 @@ def main():
     brown_dev_words = []
     for sentence in brown_dev:
         brown_dev_words.append(sentence.split(" ")[:-1])
+
+    print brown_dev_words[:10]
 
     viterbi_tagged = viterbi(brown_dev_words, taglist, known_words, q_values, e_values)
 
