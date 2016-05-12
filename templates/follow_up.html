@@ -18,18 +18,15 @@
 				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
 			{% endif %}
 			{% if ifdev == True %}
-				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+				<li id="HeaderFour"><a class="headerlink" href="/control_panel">Control Panel</a></li>
 			{% endif %}
 		</ul>
 	</div>
 	<div id="body">
 		<div id="leftpanel">
-			<div id="entry">
-				<a href="/review?section_id=0"><p id="section">All Posts</p></a>
-			</div>
 			{% for i in section_seq %}
 			<div id="entry">
-				<a href="/review?section_id={{section_id[i]}}"><p id="section">{{ section_name[i] }}</p></a>
+				<p id="section">{{ section_name[i] }}</p>
 			</div>
 			{% endfor %}
 		</div>
@@ -49,11 +46,6 @@
 				</div>
 				<div id="postcontent">
 					<p id="postcontent">{{ post_content }}</p>
-				</div>
-
-				<div id="mis">
-					<img src="../static/avatar.png" class="avatar">
-					<p id="description">User and Timestamp Concealed</p>
 				</div>
 				<div id="poststatus">
 					<img src="../static/open.png" class="statusicon">
@@ -76,7 +68,6 @@
 					<textarea id="requestcontent" name="followupcontent">Deliberate Your Idea Here :)</textarea> 
 					<input id="requestsubmit" type="submit" name="requestsubmit"></input>
 					<input type="hidden" name="postid" value="{{ post_id }}" />
-					<input type="hidden" name="currentsectionid" value="{{ current_section_id }}" />
 					<input type="hidden" name="productid" value="{{ product_id }}" />
 					<input type="hidden" name="upvote" value="{{ upvotes }}" />
 					<input type="hidden" name="downvote" value="{{ downvotes }}" />

@@ -17,8 +17,8 @@
 			{% if ifLoggedOn == False %}
 				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
 			{% endif %}
-			{% if ifdev == True %}
-				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+			{% if if_dev == True %}
+				<li id="HeaderFour"><a class="headerlink" href="/control_panel">Control Panel</a></li>
 			{% endif %}
 		</ul>
 	</div>
@@ -36,11 +36,12 @@
 			<form action="/control_panel/sentiment_analysis_result", method="GET">
 			<div id="feature">
 				<input id="analyze_button" type="submit" name="analyze" value="Analyze"/>
-				<input type="hidden" name="post_id" value="{{ post_id[i] }}"></input>
+				<input type="hidden" name="post_id" value='{{ post_id[i] }}'></input>
 				<p class="checkboxtext">{{ post_title[i] }}</p>
 			</div>
-			{% endfor %}
 			</form>
+			{% endfor %}
+
 		</div>
 	</div>
 </body>

@@ -13,11 +13,28 @@ def IrisNLPSentimentAnalysis(sentence_collection, AFINN):
 	score = 0
 	words = []
 	for sentence in sentence_collection:
-		words.extend(sentence.split(' '))		
-	for word in words:
-		try:
-			score = score + AFINN[word.lower()]
-		except:
-			score = score
-	return (score/len(words)*20)
+		splitted_sentence = sentence.split(' ')
+		a = 1	
+		for word in splitted_sentence:
+			print word
+			words.append(word)
+			try:
+				#print score
+				if word in ["not", "can't","never","no","wouldn't","haven't","cannot","doesn't","don't","hasn't","isn't","aren't","couldn't","shouldn't","didn't","weren't","shalln't"]:
+					a = -1
+				if int(AFINN[word.lower()]) > 0:
+					score = score + a * int(AFINN[word.lower()])
+				else:
+					score = score + a * int(AFINN[word.lower()])
+				print a * int(AFINN[word.lower()])
+			except:
+				score = score
+
+	try:			
+		weighted_score = float(score)/float(len(words))
+		weighted_score = weighted_score * 20
+	except:
+		weighted_score = 0
+
+	return weighted_score
 

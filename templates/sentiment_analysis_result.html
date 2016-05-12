@@ -17,8 +17,8 @@
 			{% if ifLoggedOn == False %}
 				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
 			{% endif %}
-			{% if ifdev == True %}
-				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+			{% if if_dev == True %}
+				<li id="HeaderFour"><a class="headerlink" href="/control_panel">Control Panel</a></li>
 			{% endif %}
 		</ul>
 	</div>
@@ -50,13 +50,13 @@
 						<p id="heatmap_score">{{ score }}</p>
 					</div>
 					<p id="heatmap_title_1">analysis</p>
-					{% if score < -20 %}
+					{% if score < -1 %}
 					<p id="heatmap_title_2">NEGATIVE</p>
 					{% endif %}
-					{% if score > 20 %}
+					{% if score > 1 %}
 					<p id="heatmap_title_2">POSITIVE</p>
 					{% endif %}
-					{% if score <= 20 and score >= -20 %}
+					{% if score <= 1 and score >= -1 %}
 					<p id="heatmap_title_2">NEUTRAL</p>
 					{% endif %}
 				</div>

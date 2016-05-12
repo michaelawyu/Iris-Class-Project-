@@ -232,13 +232,17 @@ def review_addpost():
 	replace_section_id = current_section_id
 
 	if current_section_id == 0:
-		replace_section_id = 1
+		cur = g.conn.execute("SELECT section_id FROM SECTIONS_NEW WHERE product_id = %s AND section_name = 'General'", product_id)
+		for i in cur:
+			replace_section_id = i[0]
+			break
 
 	cur = g.conn.execute('INSERT INTO POSTS_NEW VALUES (DEFAULT, %s, %s, %s, %s, 0, 0, false)', replace_section_id, product_id, post_title, post_content)
 	cur = g.conn.execute('SELECT post_id FROM POSTS_NEW WHERE product_id = %s AND section_id = %s AND post_title = %s AND post_content = %s', product_id, replace_section_id, post_title, post_content)
 	
 	for i in cur:
 		post_id = i[0]
+		break
 	
 	cur = g.conn.execute('INSERT INTO USERS_POSTS_NEW VALUES (%s, %s, %s, DEFAULT)', user_id, username, post_id)
 	cur.close()
@@ -348,7 +352,6 @@ def follow_up():
 		upvotes = int(request.args['upvote'])
 		downvotes = int(request.args['downvote'])
 		post_id = int(request.args['postid'])
-		current_section_id = int(request.args['currentsectionid'])
 		product_id = int(request.args['productid'])
 		post_title = request.args['posttitle']
 		post_content = request.args['postcontent']
@@ -356,9 +359,10 @@ def follow_up():
 		return redirect(url_for('review'))
 
 	ifLoggedOn = True
+
 	section_id = []
 	section_name = []
-	cur = g.conn.execute('SELECT section_id, section_name FROM SECTIONS_NEW WHERE product_id = %s', product_id)
+	cur = g.conn.execute('SELECT S.section_id, S.section_name FROM SECTIONS_NEW S, POSTS_NEW P WHERE P.post_id = %s AND S.section_id = P.section_id AND S.product_id = %s', post_id, product_id)
 	for i in cur:
 		section_id.append(i[0])
 		section_name.append(i[1])
@@ -369,19 +373,18 @@ def follow_up():
 	ifdevanswered = False
 	ifnotice = False
 
-	cur = g.conn.execute('SELECT followup_content FROM FOLLOWUPS_NEW WHERE product_id = %s AND section_id = %s AND post_id = %s', product_id, current_section_id, post_id)
+	cur = g.conn.execute('SELECT followup_content FROM FOLLOWUPS_NEW WHERE product_id = %s AND post_id = %s', product_id, post_id)
 	follow_ups = []
 	for i in cur:
 		follow_ups.append(i[0])
 	follow_up_seq = range(0, len(follow_ups))
 
-	return render_template('follow_up.html', username = username, ifLoggedOn = ifLoggedOn, if_dev = if_dev, post_id = post_id, section_seq = section_seq, section_id = section_id, section_name = section_name, product_id = product_id, upvotes = upvotes, downvotes = downvotes, post_title = post_title, post_content = post_content, ifdevanswered = ifdevanswered, ifnotice = ifnotice, follow_up_seq = follow_up_seq, follow_ups = follow_ups, current_section_id = current_section_id)
+	return render_template('follow_up.html', username = username, ifLoggedOn = ifLoggedOn, if_dev = if_dev, post_id = post_id, section_seq = section_seq, section_id = section_id, section_name = section_name, product_id = product_id, upvotes = upvotes, downvotes = downvotes, post_title = post_title, post_content = post_content, ifdevanswered = ifdevanswered, ifnotice = ifnotice, follow_up_seq = follow_up_seq, follow_ups = follow_ups)
 ##
 @app.route('/add_followup', methods = ['GET','POST'])
 def add_followup():
 	try:
 		post_id = request.form['postid']
-		current_section_id = request.form['currentsectionid']
 		product_id = request.form['productid']
 		upvotes = request.form['upvote']
 		downvotes = request.form['downvote']
@@ -390,12 +393,20 @@ def add_followup():
 		followup_title = request.form['followuptitle']
 		followup_content = request.form['followupcontent']
 	except:
-		return redirect(url_for('review'))
+		return redirect(url_for('review', notice = "An error has occurred. Please try again later."))
 
-	cur = g.conn.execute('INSERT INTO FOLLOWUPS_NEW VALUES (DEFAULT, %s, %s, %s, %s)', post_id, current_section_id, product_id, followup_content)
+	section_id = []
+	section_name = []
+	cur = g.conn.execute('SELECT S.section_id, S.section_name FROM SECTIONS_NEW S, POSTS_NEW P WHERE P.post_id = %s AND S.section_id = P.section_id AND S.product_id = %s', post_id, product_id)
+	for i in cur:
+		section_id.append(i[0])
+		section_name.append(i[1])
 	cur.close()
 
-	return redirect(url_for('follow_up', ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev, postid = post_id, currentsectionid = current_section_id, productid = product_id, upvote = upvotes, downvote = downvotes, posttitle = post_title, postcontent = post_content))
+	cur = g.conn.execute('INSERT INTO FOLLOWUPS_NEW VALUES (DEFAULT, %s, %s, %s, %s)', post_id, section_id[0], product_id, followup_content)
+	cur.close()
+
+	return redirect(url_for('follow_up', postid = post_id, productid = product_id, upvote = upvotes, downvote = downvotes, posttitle = post_title, postcontent = post_content))
 
 ##
 @app.route('/control_panel', methods = ['GET'])
@@ -413,37 +424,39 @@ def control_panel():
 	if if_dev == False:
 		return redirect(url_for('index'))
 
-	cur = g.conn.execute('SELECT D.product_name FROM DEVS_PRODUCTS D WHERE D.user_id = %s', user_id)
-	product_name = ''
+	cur = g.conn.execute('SELECT D.product_name, D.product_id FROM DEVS_PRODUCTS D WHERE D.user_id = %s', user_id)
+	product_name = None
+	product_id = None
 	for i in cur:
 		product_name = i[0]
+		product_id = i[1]
 	cur.close()
 
 	if product_name == '':
 		return redirect(url_for('add_product'))
 
 	counts = []
-	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW WHERE CURRENT_TIMESTAMP - post_time < INTERVAL '1 DAY'")
+	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW U, POSTS_NEW P WHERE P.post_id = U.post_id AND P.product_id = %s AND CURRENT_TIMESTAMP - U.post_time < INTERVAL '1 DAY'", product_id)
 	for i in cur:
 		counts.append(i[0])
 	cur.close()
 
-	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW WHERE CURRENT_TIMESTAMP - post_time < INTERVAL '2 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '1 DAY'")
+	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW U, POSTS_NEW P WHERE P.post_id = U.post_id AND P.product_id = %s AND CURRENT_TIMESTAMP - U.post_time < INTERVAL '2 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '1 DAY'", product_id)
 	for i in cur:
 		counts.append(i[0])
 	cur.close()
 
-	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW WHERE CURRENT_TIMESTAMP - post_time < INTERVAL '3 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '2 DAY'")
+	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW U, POSTS_NEW P WHERE P.post_id = U.post_id AND P.product_id = %s AND CURRENT_TIMESTAMP - U.post_time < INTERVAL '3 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '2 DAY'", product_id)
 	for i in cur:
 		counts.append(i[0])
 	cur.close()
 
-	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW WHERE CURRENT_TIMESTAMP - post_time < INTERVAL '4 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '3 DAY'")
+	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW U, POSTS_NEW P WHERE P.post_id = U.post_id AND P.product_id = %s AND CURRENT_TIMESTAMP - U.post_time < INTERVAL '4 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '3 DAY'", product_id)
 	for i in cur:
 		counts.append(i[0])
 	cur.close()
 
-	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW WHERE CURRENT_TIMESTAMP - post_time < INTERVAL '5 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '4 DAY'")
+	cur = g.conn.execute("SELECT COUNT(*) FROM USERS_POSTS_NEW U, POSTS_NEW P WHERE P.post_id = U.post_id AND P.product_id = %s AND CURRENT_TIMESTAMP - U.post_time < INTERVAL '5 DAY' AND CURRENT_TIMESTAMP - post_time > INTERVAL '4 DAY'", product_id)
 	for i in cur:
 		counts.append(i[0])
 	cur.close()
@@ -469,8 +482,11 @@ def add_product_accessDB():
 	if_followup_allowed = bool(request.form['iffollowup'])
 	user_id = session['user_id']
 
-	cur = g.conn.execute('INSERT INTO DEVS_PRODUCTS VALUES (%s, DEFAULT, %s, %s, %s, %s, %s, %s)', user_id, product_name, if_upvote_allowed, if_downvote_allowed, max_votes, if_followup_allowed, if_user_generated_feature_request_allowed)
-	cur.close()
+	try:
+		cur = g.conn.execute('INSERT INTO DEVS_PRODUCTS VALUES (%s, DEFAULT, %s, %s, %s, %s, %s, %s)', user_id, product_name, if_upvote_allowed, if_downvote_allowed, max_votes, if_followup_allowed, if_user_generated_feature_request_allowed)
+		cur.close()
+	except:
+		return "An error has occurred: Please try again later."
 
 	return redirect(url_for('control_panel'))
 ##
@@ -697,6 +713,8 @@ def sentiment_analysis_catalog():
 		post_title.append(i[0])
 		post_id.append(i[1])
 
+	print post_id
+
 	post_seq = range(0, len(post_id))
 
 	return render_template('sentiment_analysis_catalog.html', ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev, post_seq = post_seq, post_id = post_id, post_title = post_title)
@@ -720,6 +738,8 @@ def sentiment_analysis_result():
 
 	post_id = request.args['post_id']
 
+	print post_id
+
 	cur = g.conn.execute('SELECT followup_content FROM FOLLOWUPS_NEW WHERE post_id = %s', post_id)
 
 	followup_contents = []
@@ -741,10 +761,12 @@ def sentiment_analysis_result():
 		post_content = i[1]
 		upvotes = int(i[2])
 		downvotes = int(i[3])
+		break
 
 	score = IrisNLPSentimentAnalysis.IrisNLPSentimentAnalysis(followup_contents, AFINN)
+	score_str = "{0:.2f}".format(score)
 
-	return render_template('sentiment_analysis_result.html', ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev, score = score, post_title = post_title, post_content = post_content, upvotes = upvotes, downvotes = downvotes)
+	return render_template('sentiment_analysis_result.html', ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev, score = float(score_str), post_title = post_title, post_content = post_content, upvotes = upvotes, downvotes = downvotes)
 ##
 if __name__ == "__main__":
 	import click

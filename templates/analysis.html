@@ -17,8 +17,8 @@
 			{% if ifLoggedOn == False %}
 				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
 			{% endif %}
-			{% if ifdev == True %}
-				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+			{% if if_dev == True %}
+				<li id="HeaderFour"><a class="headerlink" href="/control_panel">Control Panel</a></li>
 			{% endif %}
 		</ul>
 	</div>
@@ -49,7 +49,7 @@
 		<script type="text/javascript">
 		var ctx = document.getElementById("topic_extraction_chart").getContext("2d");
 		var data = {
-			labels: ["{{keywords[0]}}","{{keywords[1]}}"],
+			labels: ["{{keywords[0]}}","{{keywords[1]}}","{{keywords[2]}}","{{keywords[3]}}","{{keywords[4]}}","{{keywords[5]}}"],
 			datasets: [{
 				label:"TestDataset",
             	fillColor: "rgba(4,115,208,0.2)",
@@ -58,7 +58,7 @@
             	pointStrokeColor: "#fff",
             	pointHighlightFill: "#fff",
             	pointHighlightStroke: "rgba(220,220,220)",
-            	data: [{{counts[0]}},{{counts[1]}}]
+            	data: [{{counts[0]}},{{counts[1]}},{{counts[2]}},{{counts[3]}},{{counts[4]}},{{counts[5]}}]
 			},]
 		}
 		var myNewChart = new Chart(ctx).Bar(data);

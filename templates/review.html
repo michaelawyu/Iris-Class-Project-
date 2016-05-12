@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Iris</title>
-	<link rel="stylesheet" type="text/css" href="../static/review.css">
+	<link rel="stylesheet" type="text/css" href="../static/CSS/review.css">
 </head>
 <body>
 	<div id="header">
@@ -18,7 +18,7 @@
 				<a href="/login"><img src="../static/login.png" class="LoginIcon" alt="Log In"></a>
 			{% endif %}
 			{% if ifdev == True %}
-				<li id="HeaderFour"><a class="headerlink" href="/controlpanel">Control Panel</a></li>
+				<li id="HeaderFour"><a class="headerlink" href="/control_panel">Control Panel</a></li>
 			{% endif %}
 		</ul>
 	</div>
@@ -96,7 +96,6 @@
 					<p id="description">{{ usernames[i] }} Published at {{ post_time[i] }}</p>
 					<form action="/followup" method="GET">
 						<input type="hidden" name="postid" value="{{ post_id[i] }}" />
-						<input type="hidden" name="currentsectionid" value="{{ current_section_id }}" />
 						<input type="hidden" name="productid" value="{{ product_id }}" />
 						<input type="hidden" name="upvote" value="{{ upvotes[i] }}" />
 						<input type="hidden" name="downvote" value="{{ downvotes[i] }}" />

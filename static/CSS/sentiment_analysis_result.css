@@ -234,12 +234,12 @@ p#heatmap_score{
 	border-style: solid;
 	position: absolute;
 	font-family: "MyriadPro";
-	font-size: 80px;
+	font-size: 72px;
 	color: white;
 }
 p#heatmap_title_1{
 	top: 0px;
-	left: 101px;
+	left: 200px;
 	height: 20px;
 	width: 100px;
 	border-width: 0px;
@@ -252,7 +252,7 @@ p#heatmap_title_1{
 }
 p#heatmap_title_2{
 	top: -16px;
-	left: 98px;
+	left: 198px;
 	height: 60px;
 	width: 300px;
 	border-width: 0px;
