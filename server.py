@@ -1,7 +1,7 @@
 import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
-from flask import Flask, request, render_template, g, redirect, Response, make_response, url_for, session, flash
+from flask import Flask, request, render_template, g, redirect, Response, make_response, url_for, session, flash, send_from_directory
 import IrisNLPTopicExtractor
 import IrisNLPSentimentAnalysis
 import collections
@@ -53,6 +53,10 @@ def index():
 		if_dev = False
 
 	return render_template("index.html", ifLoggedOn = ifLoggedOn, username = username, if_dev = if_dev)
+
+@app.route('/about')
+def about():
+	return redirect('https://github.com/michaelawyu/Iris-Class-Project-', 200)
 
 @app.route('/logout')
 def logout():
